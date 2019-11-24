@@ -347,6 +347,10 @@ class Game {
       return cycles;
     }
 
+    Player get_player() {
+      return player;
+    }
+
     void set_cycles(int cycleNum) {
       cycles = cycleNum;
     }
@@ -360,6 +364,10 @@ class Game {
       matrix.print(level);
       delay(2000);
       matrix.fillScreen(BLACK.to_333());
+      
+      //Draw player on initialization
+      player.draw();
+      
       if (level == 1) {
         for (int i = 0; i < 8; i++) {
           enemies[i].initialize((i * 4), 0, 1);
@@ -432,7 +440,7 @@ class Game {
     }
 
     bool moveInvader() {
-        if (cycles % 120 == 0) {
+        if (cycles % 80 == 0) {
           return true;
         }
         else {
@@ -444,7 +452,6 @@ class Game {
     // see spec for details of game
     // Modifies: global variable matrix
     void update(int potentiometer_value, bool button_pressed) {
-
       
       // Moving the Player
       if(((player.get_x()) != ceil((double(potentiometer_value) / 1024.0) * 29) + 1)
@@ -590,12 +597,12 @@ void setup() {
 // see https://www.arduino.cc/reference/en/language/structure/sketch/loop/
 void loop() {
   int potentiometer_value = analogRead(POTENTIOMETER_PIN_NUMBER);
+  Serial.println(game.get_player().get_x());
   bool button_pressed = (digitalRead(BUTTON_PIN_NUMBER) == HIGH);
   if((millis() - loopTime) > CYCLE_LENGTH){
     loopTime = millis();
     game.set_cycles(game.get_cycles() + 1);
     game.update(potentiometer_value, button_pressed);
-    
   }
   
 }
